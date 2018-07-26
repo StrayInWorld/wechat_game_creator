@@ -11,15 +11,18 @@ cc.Class({
 
     onLoad () {
         // cc.director.setDisplayStats(false); //关闭fps
+        var canvas=cc.director.getScene().getChildByName("Canvas");
+        let squareTest=cc.instantiate(this.square);
+        var canvasSidePos=canvas.width/2+squareTest.width/2
         for(let i=0;i<10;i++){
             let randomSquare=cc.instantiate(this.square);
-            randomSquare.x=-420;
-            randomSquare.y=-400+i*80;
+            randomSquare.x=-canvasSidePos;
+            randomSquare.y=-420+i*70;
             if(i%2==0){
-                randomSquare.x=420;
+                randomSquare.x=canvasSidePos;
                 randomSquare.getComponent(SquareComp).isLeft=false;
             }
-            cc.director.getScene().getChildByName("Canvas").addChild(randomSquare);
+            canvas.addChild(randomSquare);
         }
 
     },
