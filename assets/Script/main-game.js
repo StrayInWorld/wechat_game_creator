@@ -4,7 +4,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-       square:cc.Prefab
+       square:cc.Prefab,
+       startBtn:cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -24,7 +25,13 @@ cc.Class({
             }
             canvas.addChild(randomSquare);
         }
+        this.startBtn.setOpacity(0);
+        this.startBtn.runAction(cc.fadeIn(1.5));
 
+    },
+    startBtnCB(){
+        cc.log("dddddddddddddd");
+        cc.director.loadScene("maingame");
     },
 
     start () {
