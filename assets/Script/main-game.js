@@ -1,41 +1,41 @@
-var SquareComp=require("square-comp");
-
 cc.Class({
     extends: cc.Component,
 
     properties: {
-       square:cc.Prefab,
-       startBtn:cc.Node
+        dispatchBtn:cc.Node,
+        dispatchSquare:cc.Node,
+        powerLineMask:cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        // cc.director.setDisplayStats(false); //关闭fps
-        var canvas=cc.director.getScene().getChildByName("Canvas");
-        let squareTest=cc.instantiate(this.square);
-        var canvasSidePos=canvas.width/2+squareTest.width/2
-        for(let i=0;i<10;i++){
-            let randomSquare=cc.instantiate(this.square);
-            randomSquare.x=-canvasSidePos;
-            randomSquare.y=-420+i*70;
-            if(i%2==0){
-                randomSquare.x=canvasSidePos;
-                randomSquare.getComponent(SquareComp).isLeft=false;
-            }
-            canvas.addChild(randomSquare);
-        }
-        this.startBtn.setOpacity(0);
-        this.startBtn.runAction(cc.fadeIn(1.5));
+        this.squareWidget= this.dispatchSquare.getComponent(cc.Widget);
+        let lineMaskWidget=this.powerLineMask.getComponent(cc.Widget);
+        this.dispatchBtn.on("touchstart",function(event){
+            this.powerLineMask.runAction(cc.sequence(
+                cc.callFunc(function(){
+                    cc.log("before:",lineMaskWidget.left);        
+                },this),
+                cc.callFunc(function(){
+                    lineMaskWidget.left+=320;
+                },this),
+                cc.callFunc(function(){
+                    cc.log("after:",lineMaskWidget.left);
+                },this)));
 
-    },
-    startBtnCB(){
-        cc.log("dddddddddddddd");
-        cc.director.loadScene("maingame");
+            cc.log("qeqwe");
+            // this.dispatchSquare.runAction(cc.sequence(
+            //     cc.callFunc(function(){cc.log(this.squareWidget.left)},this),
+            //      cc.callFunc(function(){this.squareWidget.left=10},this),
+            //      cc.callFunc(function(){cc.log(this.squareWidget.left)},this)
+
+            // ));
+
+        },this);
     },
 
     start () {
-
     },
 
     // update (dt) {},
