@@ -11,32 +11,31 @@ cc.Class({
 
     onLoad () {
         this.squareWidget= this.dispatchSquare.getComponent(cc.Widget);
-        let lineMaskWidget=this.powerLineMask.getComponent(cc.Widget);
+        this.lineMaskWidget=this.powerLineMask.getComponent(cc.Widget);
+        this.isChangeLeft=false;
+        this.canvansWidth=this.node.width;
+        cc.log(this.canvansWidth);
         this.dispatchBtn.on("touchstart",function(event){
-            this.powerLineMask.runAction(cc.sequence(
-                cc.callFunc(function(){
-                    cc.log("before:",lineMaskWidget.left);        
-                },this),
-                cc.callFunc(function(){
-                    lineMaskWidget.left+=320;
-                },this),
-                cc.callFunc(function(){
-                    cc.log("after:",lineMaskWidget.left);
-                },this)));
-
+            this.lineMaskWidget.left=0;
+            this.isChangeLeft=true;
             cc.log("qeqwe");
-            // this.dispatchSquare.runAction(cc.sequence(
-            //     cc.callFunc(function(){cc.log(this.squareWidget.left)},this),
-            //      cc.callFunc(function(){this.squareWidget.left=10},this),
-            //      cc.callFunc(function(){cc.log(this.squareWidget.left)},this)
-
-            // ));
-
         },this);
+        this.dispatchBtn.on("touchend",this.backLineMask,this);
+        this.dispatchBtn.on("touchcancel",this.backLineMask,this);
     },
 
     start () {
     },
 
-    // update (dt) {},
+    update (dt) {
+        if(this.isChangeLeft&&this.lineMaskWidget.left<=this.node.width){
+            this.lineMaskWidget.left+=5;
+            cc.log(this.lineMaskWidget.left);
+        }
+    },
+    backLineMask(){
+        this.lineMaskWidget.left=-1500;
+        this.isChangeLeft=false;
+        cc.log("qeqwe");        
+    }
 });
