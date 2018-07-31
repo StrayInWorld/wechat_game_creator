@@ -20,7 +20,7 @@ cc.Class({
             let whiteSquare=cc.instantiate(this.whiteSquarePre);
             this.whiteSquarePool.put(whiteSquare);
         }
-        this.schedule(this.createWhiteSquare,5,cc.macro.REPEAT_FOREVER,5);
+        this.schedule(this.createWhiteSquare,2,2,5);
     },
 
     start () {
@@ -36,6 +36,35 @@ cc.Class({
         else{
             whiteSquareInPool=cc.instantiate(this.whiteSquarePre);
         }
-        whiteSquareInPool.parent=this.node;        
+        
+        whiteSquareInPool.runAction(cc.sequence(
+            cc.moveBy(5.0, cc.p(0, -708)),
+            cc.callFunc(function () { 
+                this.whiteSquarePool.put(whiteSquareInPool);
+                cc.log("callFunc,parent:",this.node.active);
+                cc.log("callFunc,parent:",this.node.activeInHierarchy);
+            }, this)
+        ));
+
+        whiteSquareInPool.parent=this.node;            
+    },
+    generateNode: function () {
+        var monster = this.whiteSquarePool.get();  //调用PoolHandler的reuse
+        if (!monster) {
+            monster = cc.instantiate(this.whiteSquarePre);
+            // Add pool handler component which will control the touch event
+            // monster.addComponent('PoolHandler');
+        }
+        
+        monster.runAction(cc.sequence(
+            cc.moveBy(5, 0, -100),
+            cc.callFunc(this.removeNode, this, monster)
+        ));
+        
+        this.node.addChild(monster);
+    },
+    
+    removeNode: function (sender, monster) {
+        this.whiteSquarePool.put(monster);
     }
 });
