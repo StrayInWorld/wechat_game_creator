@@ -1,41 +1,41 @@
+let whiteSquareCom=require("white-square");
+
 cc.Class({
     extends: cc.Component,
 
-    properties: {
-        dispatchBtn:cc.Node,
+    properties: {   
         dispatchSquare:cc.Node,
-        powerLineMask:cc.Node
+        whiteSquarePre:cc.Prefab
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.squareWidget= this.dispatchSquare.getComponent(cc.Widget);
-        this.lineMaskWidget=this.powerLineMask.getComponent(cc.Widget);
-        this.isChangeLeft=false;
-        this.canvansWidth=this.node.width;
-        cc.log(this.canvansWidth);
-        this.dispatchBtn.on("touchstart",function(event){
-            this.lineMaskWidget.left=0;
-            this.isChangeLeft=true;
-            cc.log("qeqwe");
-        },this);
-        this.dispatchBtn.on("touchend",this.backLineMask,this);
-        this.dispatchBtn.on("touchcancel",this.backLineMask,this);
+
+        //缓存池
+        this.whiteSquarePool=new cc.NodePool(whiteSquareCom);
+        let whiteSauareNum=10;
+        for(let i=0;i<whiteSauareNum;i++){
+            let whiteSquare=cc.instantiate(this.whiteSquarePre);
+            this.whiteSquarePool.put(whiteSquare);
+        }
+        this.schedule(this.createWhiteSquare,5,cc.macro.REPEAT_FOREVER,5);
     },
 
     start () {
     },
 
     update (dt) {
-        if(this.isChangeLeft&&this.lineMaskWidget.left<=this.node.width){
-            this.lineMaskWidget.left+=5;
-            cc.log(this.lineMaskWidget.left);
-        }
     },
-    backLineMask(){
-        this.lineMaskWidget.left=-1500;
-        this.isChangeLeft=false;
-        cc.log("qeqwe");        
+    createWhiteSquare(){
+        let whiteSquareInPool=null;
+        if(this.whiteSquarePool.size()>0){
+            whiteSquareInPool=this.whiteSquarePool.get(this.whiteSquarePool);
+        }
+        else{
+            whiteSquareInPool=cc.instantiate(this.whiteSquarePre);
+        }
+        whiteSquareInPool.parent=this.node;        
     }
 });
