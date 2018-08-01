@@ -26,7 +26,6 @@ cc.Class({
     update (dt) {
         if(this.isChangeLeft&&this.lineMaskWidget.left<=this.node.parent.width){
             this.lineMaskWidget.left+=5;
-            cc.log(this.lineMaskWidget.left);
         }
 
     },
