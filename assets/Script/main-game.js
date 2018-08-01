@@ -1,12 +1,12 @@
-let whiteSquareCom = require("white-square");
-
 cc.Class({
     extends: cc.Component,
 
     properties: {
         dispatchSquare: cc.Node,
         whiteSquarePre: cc.Prefab,
-        overLine: cc.Node
+        overLine: cc.Node,
+        dispatchBtn: cc.Node,
+        scheduleNum: cc.Label
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -15,19 +15,51 @@ cc.Class({
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
 
         //缓存池
-        this.whiteSquarePool = new cc.NodePool(whiteSquareCom);
+        this.whiteSquarePool = new cc.NodePool();
         let whiteSauareNum = 10;
         for (let i = 0; i < whiteSauareNum; i++) {
             let whiteSquare = cc.instantiate(this.whiteSquarePre);
             this.whiteSquarePool.put(whiteSquare);
         }
-        this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER, 2);
+
+        this.dispatchBtn.interactable=false;
+        //倒计时
+        let action1 = cc.callFunc(function () {
+            this.scheduleNum.node.opacity = 0;
+            this.scheduleNum.node.scale = 0.1;
+        }, this);
+        let action2 = cc.spawn(cc.scaleTo(1.0, 1.0), cc.fadeIn(1.0));
+        let action3 = cc.fadeOut(0.5);
+
+        let doActionNum=0;
+        this.scheduleNum.node.runAction(cc.sequence(
+            action1, action2, action3,
+            cc.callFunc(function () { 
+                doActionNum+=1;
+                cc.log(doActionNum);
+                if(doActionNum===1){
+                    this.scheduleNum.string = "2" 
+                }
+                else if(doActionNum===2){
+                    this.scheduleNum.string = "3"
+                }
+                else if(doActionNum===3){
+                    this.dispatchBtn.interactable=false;
+                }
+            }, this)
+        ).repeat(3));
+
     },
 
     start() {
     },
 
     update(dt) {
+        let hasSchedule = cc.director.getScheduler().isScheduled(this.createWhiteSquare, this);
+        let isDispatch = this.dispatchBtn.getComponent("dispatch-btn").isDispatch;
+        if (isDispatch && !hasSchedule) {
+            this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER);
+        }
     },
     createWhiteSquare() {
         let whiteSquareInPool = null;

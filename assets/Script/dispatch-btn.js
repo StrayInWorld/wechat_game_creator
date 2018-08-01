@@ -4,6 +4,7 @@ cc.Class({
     properties: {
         dispatchBtn:cc.Node,
         powerLineMask:cc.Node,
+        isDispatch:false
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -11,11 +12,13 @@ cc.Class({
     onLoad () {
         this.lineMaskWidget=this.powerLineMask.getComponent(cc.Widget);
         this.isChangeLeft=false;
+        this.reduceWidgetLeft=3;
 
         //发射按钮
         this.dispatchBtn.on("touchstart",function(event){
             this.lineMaskWidget.left=0;
             this.isChangeLeft=true;
+            this.isDispatch=true;
         },this);
         this.dispatchBtn.on("touchend",this.backLineMask,this);
         this.dispatchBtn.on("touchcancel",this.backLineMask,this);
@@ -25,7 +28,7 @@ cc.Class({
     },
     update (dt) {
         if(this.isChangeLeft&&this.lineMaskWidget.left<=this.node.parent.width){
-            this.lineMaskWidget.left+=5;
+            this.lineMaskWidget.left+=this.reduceWidgetLeft;
         }
 
     },
