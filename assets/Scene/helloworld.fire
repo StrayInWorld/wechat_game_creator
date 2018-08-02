@@ -701,7 +701,7 @@
     "target": {
       "__id__": 2
     },
-    "component": "main-game",
+    "component": "home-scene",
     "handler": "startBtnCB",
     "customEventData": ""
   },
