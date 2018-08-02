@@ -22,36 +22,40 @@ cc.Class({
             this.whiteSquarePool.put(whiteSquare);
         }
 
-        this.dispatchBtn.interactable=false;
+    },
+
+    start() {
         //倒计时
         let action1 = cc.callFunc(function () {
             this.scheduleNum.node.opacity = 0;
             this.scheduleNum.node.scale = 0.1;
         }, this);
-        let action2 = cc.spawn(cc.scaleTo(1.0, 1.0), cc.fadeIn(1.0));
+        let action2 = cc.spawn(cc.scaleTo(0.5, 1.0), cc.fadeIn(0.5));
         let action3 = cc.fadeOut(0.5);
 
-        let doActionNum=0;
+        let doActionNum = 0;
+        this.scheduleNum.string = "3";
         this.scheduleNum.node.runAction(cc.sequence(
             action1, action2, action3,
-            cc.callFunc(function () { 
-                doActionNum+=1;
-                cc.log(doActionNum);
-                if(doActionNum===1){
-                    this.scheduleNum.string = "2" 
+            cc.callFunc(function () {
+                doActionNum += 1;
+                if (doActionNum === 1) {
+                    this.scheduleNum.string = "2"
                 }
-                else if(doActionNum===2){
-                    this.scheduleNum.string = "3"
+                else if (doActionNum === 2) {
+                    this.scheduleNum.string = "1"
                 }
-                else if(doActionNum===3){
-                    this.dispatchBtn.interactable=false;
+                else if (doActionNum === 3) {
+                    //开启发射按钮事件回调
+                    let dispatchBtnComp=this.dispatchBtn.getComponent("dispatch-btn");
+                    this.dispatchBtn.on("touchstart", function (event) {
+                        dispatchBtnComp.lineMaskWidget.left = 0;
+                        dispatchBtnComp.isChangeLeft = true;
+                        dispatchBtnComp.isDispatch = true;
+                    }, this);
                 }
             }, this)
         ).repeat(3));
-
-    },
-
-    start() {
     },
 
     update(dt) {

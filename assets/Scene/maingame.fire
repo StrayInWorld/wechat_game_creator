@@ -513,9 +513,9 @@
     "transition": 1,
     "pressedColor": {
       "__type__": "cc.Color",
-      "r": 11,
-      "g": 59,
-      "b": 252,
+      "r": 0,
+      "g": 92,
+      "b": 255,
       "a": 255
     },
     "hoverColor": {

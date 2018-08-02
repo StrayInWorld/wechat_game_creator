@@ -2,7 +2,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        dispatchBtn:cc.Node,
         powerLineMask:cc.Node,
         isDispatch:false
     },
@@ -14,14 +13,8 @@ cc.Class({
         this.isChangeLeft=false;
         this.reduceWidgetLeft=3;
 
-        //发射按钮
-        this.dispatchBtn.on("touchstart",function(event){
-            this.lineMaskWidget.left=0;
-            this.isChangeLeft=true;
-            this.isDispatch=true;
-        },this);
-        this.dispatchBtn.on("touchend",this.backLineMask,this);
-        this.dispatchBtn.on("touchcancel",this.backLineMask,this);
+        this.node.on("touchend",this.backLineMask,this);
+        this.node.on("touchcancel",this.backLineMask,this);
     },
     start () {
 
