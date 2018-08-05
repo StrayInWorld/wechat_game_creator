@@ -15,7 +15,7 @@ cc.Class({
             new cc.color(165,226,152),new cc.color(121,202,240),new cc.color(251,71,130),new cc.color(95,218,222)]
         if(colorAry[Math.floor(Math.random()*9)]!==undefined){
             // this.node.color=colorAry[Math.floor(Math.random()*9)];
-            this.node.color=new cc.color(164,227,252);
+            this.node.color==new cc.color(148,245,201);
         }
         else{
             this.node.color=new cc.color(148,245,201);

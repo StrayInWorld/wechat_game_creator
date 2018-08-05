@@ -16,15 +16,18 @@ cc.Class({
 
         //边缘方块
         var canvas=cc.director.getScene().getChildByName("Canvas");
-        let squareTest=cc.instantiate(this.square);
-        var canvasSidePos=canvas.width/2+squareTest.width/2
+        let distance=-3;
         for(let i=0;i<10;i++){
             let randomSquare=cc.instantiate(this.square);
-            randomSquare.x=-canvasSidePos;
+            let randomSquareWidget=randomSquare.getComponent(cc.Widget);
             randomSquare.y=-420+i*70;
+            randomSquareWidget.isAlignLeft=true;
+            randomSquareWidget.left=distance;
             if(i%2==0){
-                randomSquare.x=canvasSidePos;
-                randomSquare.getComponent(SquareComp).isLeft=false;
+                randomSquareWidget.isAlignLeft=false;          
+                randomSquareWidget.isAlignRight=true;
+                randomSquareWidget.right=distance;
+                randomSquare.getChildByName("singleColor").getComponent(SquareComp).isLeft=false;
             }
             canvas.addChild(randomSquare);
         }
@@ -45,7 +48,12 @@ cc.Class({
 
     start () {
 
-    },
-
+    }, 
+    getSpriteFrameName(parentNode,childNode){
+        let node=parentNode.getChildByName(childNode);
+        if(node){
+            return  node.getComponent(cc.Sprite).spriteFrame._name; 
+        }
+    }
     // update (dt) {},
 });
