@@ -10,15 +10,14 @@ cc.Class({
     },
 
     start () {
-        var colorAry=[new cc.color(148,245,201),new cc.color(106,250,209),new cc.color(165,228,5),
-            new cc.color(254,101,144),new cc.color(171,226,67),new cc.color(204,241,91),
-            new cc.color(165,226,152),new cc.color(121,202,240),new cc.color(251,71,130),new cc.color(95,218,222)]
-        if(colorAry[Math.floor(Math.random()*9)]!==undefined){
-            // this.node.color=colorAry[Math.floor(Math.random()*9)];
-            this.node.color==new cc.color(148,245,201);
+        var colorAry=[new cc.color(185,248,219),new cc.color(178,231,232)];
+        let colorInAry=colorAry[Math.floor(Math.random()*2)];
+        if(colorInAry!==undefined){
+            this.node.getChildByName("singleColor").color=colorInAry;
+            // this.node.getChildByName("singleColor").color=new cc.color(217,232,178);
         }
         else{
-            this.node.color=new cc.color(148,245,201);
+            this.node.getChildByName("singleColor").color=new cc.color(148,245,201);
         }
         var nodeWidth=this.node.width;
         var canvasWidth=this.node.parent.width;
