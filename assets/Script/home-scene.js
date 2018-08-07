@@ -7,16 +7,12 @@ cc.Class({
         square: cc.Prefab,
         startBtn: cc.Node,
         gameTitleNode: cc.Node,
-        singleSquare: cc.Node,
- 
-        age:10
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
         // cc.director.setDisplayStats(false); //关闭fps
-
 
         this.symbolAry=null;
         this.numberAry=null;
@@ -27,7 +23,6 @@ cc.Class({
                 return;
             }
             self.numberAry=assets;
-            cc.log(self.numberAry);
             self.node.runAction(cc.callFunc(function(){
                 cc.loader.loadResDir("symbol", cc.SpriteFrame, function (err, assets, url) {
                     if (err) {
@@ -35,7 +30,6 @@ cc.Class({
                         return;
                     }
                     self.symbolAry = assets;
-                    cc.log(self.symbolAry);
                     self.node.runAction(cc.callFunc(self.createSquare,self));
                 });
             }));
@@ -58,10 +52,8 @@ cc.Class({
     },
 
     createSquare(){
-        cc.log("dd");
         let canvasWidth = this.node.width;
         let squareTest = cc.instantiate(this.square);
-        let symbolSF = this.getSpriteFrameFromSprite(this.singleSquare, "symbol");
 
         let canvasSidePos = canvasWidth / 2 + squareTest.width / 2
         //边缘方块
@@ -75,21 +67,32 @@ cc.Class({
                 randomSquare.x = canvasSidePos;
             }
             let randomSquareSymbol = randomSquare.getChildByName("symbol");
-            randomSquareSymbol.getComponent(cc.Sprite).spriteFrame=this.symbolAry[Math.floor(Math.random()*4)];
+            let randomSymbol = this.symbolAry[this.getInteger(4)];
+            randomSquareSymbol.getComponent(cc.Sprite).spriteFrame=randomSymbol;
 
             let randomSquareNum =randomSquare.getChildByName("num");
-            randomSquareNum.getComponent(cc.Sprite).spriteFrame=this.numberAry[Math.floor(Math.random()*9)];
+            let randomNum=0;
+            if(this.isDivisionSymbol(randomSymbol.name)){
+                randomNum=this.numberAry[this.getInteger(10,1)];
+                cc.log("true",randomNum);
+            }
+            else{
+                randomNum=this.numberAry[this.getInteger(10,0)];
+                cc.log("false",randomNum);
+            }
+            randomSquareNum.getComponent(cc.Sprite).spriteFrame=randomNum;
             canvas.addChild(randomSquare);
         }
     },
-    start() {
-        cc.log("start");
+    start(){},
+    isDivisionSymbol(symbolName){
+           if(symbolName==="division"){
+               return true;
+           }
+           return false;
     },
-    getSpriteFrameFromSprite(parentNode, childNode) {
-        let node = parentNode.getChildByName(childNode);
-        if (node) {
-            return node.getComponent(cc.Sprite).spriteFrame;
-        }
+    getInteger(toNum,fromNum=0){
+          return Math.floor(Math.random()*toNum)+fromNum;
     }
     // update (dt) {},
 });
