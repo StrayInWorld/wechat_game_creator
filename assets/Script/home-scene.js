@@ -1,4 +1,5 @@
-var SquareComp = require("square-comp");
+let SquareComp = require("square-comp");
+let SquareStringTool=require("SquareStringTool");
 
 cc.Class({
     extends: cc.Component,
@@ -67,32 +68,32 @@ cc.Class({
                 randomSquare.x = canvasSidePos;
             }
             let randomSquareSymbol = randomSquare.getChildByName("symbol");
-            let randomSymbol = this.symbolAry[this.getInteger(4)];
+            let randomSymbol = this.symbolAry[SquareStringTool.getInteger(4)];
             randomSquareSymbol.getComponent(cc.Sprite).spriteFrame=randomSymbol;
 
             let randomSquareNum =randomSquare.getChildByName("num");
             let randomNum=0;
-            if(this.isDivisionSymbol(randomSymbol.name)){
-                randomNum=this.numberAry[this.getInteger(10,1)];
+            if(SquareStringTool.isDivisionSymbol(randomSymbol.name)){
+                randomNum=this.numberAry[SquareStringTool.getInteger(9,1)];
                 cc.log("true",randomNum);
             }
             else{
-                randomNum=this.numberAry[this.getInteger(10,0)];
+                randomNum=this.numberAry[SquareStringTool.getInteger(10,0)];
                 cc.log("false",randomNum);
             }
             randomSquareNum.getComponent(cc.Sprite).spriteFrame=randomNum;
             canvas.addChild(randomSquare);
         }
     },
-    start(){},
-    isDivisionSymbol(symbolName){
-           if(symbolName==="division"){
-               return true;
-           }
-           return false;
-    },
-    getInteger(toNum,fromNum=0){
-          return Math.floor(Math.random()*toNum)+fromNum;
-    }
+    start(){}
+    // isDivisionSymbol(symbolName){
+    //        if(symbolName==="division"){
+    //            return true;
+    //        }
+    //        return false;
+    // },
+    // getInteger(toNum,fromNum=0){
+    //       return Math.floor(Math.random()*toNum)+fromNum;
+    // }
     // update (dt) {},
 });

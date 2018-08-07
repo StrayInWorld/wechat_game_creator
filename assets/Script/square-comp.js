@@ -25,7 +25,7 @@ cc.Class({
         if(!this.isLeft){
             targetX=cc.p(canvasWidth/2-nodeWidth/2-5,this.node.y);
         }
-        this.node.runAction(cc.moveTo(1.0,targetX).easing(cc.easeBounceInOut(0.5)));
+        this.node.runAction(cc.moveTo(0.5,targetX).easing(cc.easeBounceInOut(0.5)));
 
     },
 
