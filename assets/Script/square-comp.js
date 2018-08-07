@@ -1,9 +1,9 @@
-
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        isLeft:true
+        isLeft:true,
+        floor:0
     },
 
     onLoad () {
@@ -14,7 +14,6 @@ cc.Class({
         let colorInAry=colorAry[Math.floor(Math.random()*2)];
         if(colorInAry!==undefined){
             this.node.getChildByName("singleColor").color=colorInAry;
-            // this.node.getChildByName("singleColor").color=new cc.color(217,232,178);
         }
         else{
             this.node.getChildByName("singleColor").color=new cc.color(148,245,201);
@@ -27,7 +26,7 @@ cc.Class({
         }
         this.node.runAction(cc.moveTo(0.5,targetX).easing(cc.easeBounceInOut(0.5)));
 
-    },
+    }
 
     // update (dt) {},
 });

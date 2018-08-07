@@ -1,9 +1,13 @@
+let SquareTool=require("SquareTool");
+
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
         dispatchSquare: cc.Node,
         whiteSquarePre: cc.Prefab,
+        square:cc.Prefab,
         overLine: cc.Node,
         dispatchBtn: cc.Node,
         scheduleNum: cc.Label
@@ -13,6 +17,7 @@ cc.Class({
 
     onLoad() {
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
+        this.dispatchSquare.opacity=0;
 
         //缓存池
         this.whiteSquarePool = new cc.NodePool();
@@ -53,6 +58,8 @@ cc.Class({
                         dispatchBtnComp.isChangeLeft = true;
                         dispatchBtnComp.isDispatch = true;
                     }, this);
+                    this.dispatchSquare.opacity=255;
+                    SquareTool.createRandomSquare(this.square,-260);
                 }
             }, this)
         ).repeat(3));
@@ -61,6 +68,7 @@ cc.Class({
     update(dt) {
         let hasSchedule = cc.director.getScheduler().isScheduled(this.createWhiteSquare, this);
         let isDispatch = this.dispatchBtn.getComponent("dispatch-btn").isDispatch;
+        //开启中间方块降落计时器
         if (isDispatch && !hasSchedule) {
             this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER);
         }
