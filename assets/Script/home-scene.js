@@ -15,22 +15,20 @@ cc.Class({
     onLoad() {
         // cc.director.setDisplayStats(false); //关闭fps
 
-        this.symbolAry=null;
-        this.numberAry=null;
         var self = this;
         cc.loader.loadResDir("num", cc.SpriteFrame, function (err, assets, url) {
             if (err) {
                 cc.error(err.message || err);
                 return;
             }
-            self.numberAry=assets;
+            SquareStringTool.numberSpriteFrame=assets;
             self.node.runAction(cc.callFunc(function(){
                 cc.loader.loadResDir("symbol", cc.SpriteFrame, function (err, assets, url) {
                     if (err) {
                         cc.error(err.message || err);
                         return;
                     }
-                    self.symbolAry = assets;
+                    SquareStringTool.symbolSpriteFrame=assets;
                     self.node.runAction(cc.callFunc(self.createSquare,self));
                 });
             }));
@@ -68,17 +66,17 @@ cc.Class({
                 randomSquare.x = canvasSidePos;
             }
             let randomSquareSymbol = randomSquare.getChildByName("symbol");
-            let randomSymbol = this.symbolAry[SquareStringTool.getInteger(4)];
+            let randomSymbol = SquareStringTool.symbolSpriteFrame[SquareStringTool.getInteger(4)];
             randomSquareSymbol.getComponent(cc.Sprite).spriteFrame=randomSymbol;
 
             let randomSquareNum =randomSquare.getChildByName("num");
             let randomNum=0;
             if(SquareStringTool.isDivisionSymbol(randomSymbol.name)){
-                randomNum=this.numberAry[SquareStringTool.getInteger(9,1)];
+                randomNum=SquareStringTool.numberSpriteFrame[SquareStringTool.getInteger(9,1)];
                 cc.log("true",randomNum);
             }
             else{
-                randomNum=this.numberAry[SquareStringTool.getInteger(10,0)];
+                randomNum=SquareStringTool.numberSpriteFrame[SquareStringTool.getInteger(10,0)];
                 cc.log("false",randomNum);
             }
             randomSquareNum.getComponent(cc.Sprite).spriteFrame=randomNum;
