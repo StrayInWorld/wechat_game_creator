@@ -18,11 +18,12 @@ cc.Class({
         else{
             this.node.getChildByName("singleColor").color=new cc.color(148,245,201);
         }
-        var nodeWidth=this.node.width;
+        var nodeWidth=this.node.width*this.node.scaleX;
         var canvasWidth=this.node.parent.width;
-        var targetX=cc.p(-canvasWidth/2+nodeWidth/2+5,this.node.y)
+        var extraWidth = 5;
+        var targetX=cc.p(-canvasWidth/2+nodeWidth/2+extraWidth,this.node.y)
         if(!this.isLeft){
-            targetX=cc.p(canvasWidth/2-nodeWidth/2-5,this.node.y);
+            targetX=cc.p(canvasWidth/2-nodeWidth/2-extraWidth,this.node.y);
         }
         this.node.runAction(cc.moveTo(0.5,targetX).easing(cc.easeBounceInOut(0.5)));
 

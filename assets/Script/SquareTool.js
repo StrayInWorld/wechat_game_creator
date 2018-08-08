@@ -11,7 +11,7 @@ function getInteger(toNum,fromNum=0){
     return Math.floor(Math.random()*toNum)+fromNum;
 }
 
-function createRandomSquare(prefabNode,startHeight=-420){
+function createRandomSquare(prefabNode,startHeight=-380){
     var canvas = cc.director.getScene().getChildByName("Canvas");
     let canvasWidth = canvas.width;
     let prefabInstance = cc.instantiate(prefabNode);

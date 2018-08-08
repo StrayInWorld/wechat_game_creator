@@ -1,4 +1,4 @@
-let SquareTool=require("SquareTool");
+let SquareTool = require("SquareTool");
 
 
 cc.Class({
@@ -7,17 +7,19 @@ cc.Class({
     properties: {
         dispatchSquare: cc.Node,
         whiteSquarePre: cc.Prefab,
-        square:cc.Prefab,
+        square: cc.Prefab,
         overLine: cc.Node,
         dispatchBtn: cc.Node,
-        scheduleNum: cc.Label
+        scheduleNum: cc.Label,
+        arrow: cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
-        this.dispatchSquare.opacity=0;
+        this.dispatchSquare.opacity = 0;
+        this.arrow.opacity = 0;
 
         //缓存池
         this.whiteSquarePool = new cc.NodePool();
@@ -49,17 +51,31 @@ cc.Class({
                 }
                 else if (doActionNum === 2) {
                     this.scheduleNum.string = "1"
+                    //显示黑色方块
+                    this.dispatchSquare.opacity = 255;
                 }
                 else if (doActionNum === 3) {
                     //开启发射按钮事件回调
-                    let dispatchBtnComp=this.dispatchBtn.getComponent("dispatch-btn");
+                    let dispatchBtnComp = this.dispatchBtn.getComponent("dispatch-btn");
                     this.dispatchBtn.on("touchstart", function (event) {
                         dispatchBtnComp.lineMaskWidget.left = 0;
                         dispatchBtnComp.isChangeLeft = true;
                         dispatchBtnComp.isDispatch = true;
                     }, this);
-                    this.dispatchSquare.opacity=255;
-                    SquareTool.createRandomSquare(this.square,-260);
+                    //显示箭头，并监听箭头触摸事件
+                    this.arrow.runAction(cc.fadeIn(3));
+                    this.node.on("touchmove", function (event) {
+                        let touch = event.touch;
+                        // // let startPos = cc.v2(touch.getStartLocation().x, touch.getStartLocation().y);
+                        let startPos=cc.v2(touch.getPreviousLocation().x, touch.getPreviousLocation().y);
+                        let moveRad = startPos.signAngle(cc.v2(touch.getLocation().x, touch.getLocation().y));
+                        let moveRotation = moveRad * 360 / Math.PI;
+                        cc.log("move event", moveRotation);
+
+                        this.arrow.rotation += moveRotation;
+                    }, this);
+                    //创建边缘方块
+                    SquareTool.createRandomSquare(this.square, -260);
                 }
             }, this)
         ).repeat(3));
