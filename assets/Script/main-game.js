@@ -20,6 +20,8 @@ cc.Class({
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
+        this.ball=this.arrow.parent;
+        cc.log(this.ball);
 
         //缓存池
         this.whiteSquarePool = new cc.NodePool();
@@ -65,14 +67,22 @@ cc.Class({
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
                     this.node.on("touchmove", function (event) {
+                        //设置角度
                         let touch = event.touch;
-                        // // let startPos = cc.v2(touch.getStartLocation().x, touch.getStartLocation().y);
-                        let startPos=cc.v2(touch.getPreviousLocation().x, touch.getPreviousLocation().y);
-                        let moveRad = startPos.signAngle(cc.v2(touch.getLocation().x, touch.getLocation().y));
-                        let moveRotation = moveRad * 360 / Math.PI;
-                        cc.log("move event", moveRotation);
+                        let startPos=cc.v2(touch.getPreviousLocation());
+                        let currentPos=cc.v2(touch.getLocation());
+                        let moveRad = currentPos.signAngle(startPos);
+                        let moveRotation = moveRad * 180 / Math.PI;
+                        // cc.log("move event", -moveRotation);
+                        this.arrow.rotation += -moveRotation;
+                        //设置刚体初始速度
+                        //速度不对
+                        cc.log(this.node.convertToWorldSpace(this.arrow.position));
+                        let vec=currentPos.sub(this.arrow.convertToWorldSpace(this.arrow.position));
+                        let velocity=vec.normalize().mulSelf(100);
+                        let rigidBody=this.ball.getComponent(cc.RigidBody);
+                        rigidBody.linearVelocity=velocity;
 
-                        this.arrow.rotation += moveRotation;
                     }, this);
                     //创建边缘方块
                     SquareTool.createRandomSquare(this.square, -260);
@@ -85,9 +95,9 @@ cc.Class({
         let hasSchedule = cc.director.getScheduler().isScheduled(this.createWhiteSquare, this);
         let isDispatch = this.dispatchBtn.getComponent("dispatch-btn").isDispatch;
         //开启中间方块降落计时器
-        if (isDispatch && !hasSchedule) {
-            this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER);
-        }
+        // if (isDispatch && !hasSchedule) {
+        //     this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER);
+        // }
     },
     createWhiteSquare() {
         let whiteSquareInPool = null;

@@ -1,9 +1,12 @@
+let BallComp=require("BallComp");
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
         powerLineMask:cc.Node,
-        isDispatch:false
+        isDispatch:false,
+        ball:cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -13,7 +16,7 @@ cc.Class({
         this.isChangeLeft=false;
         this.reduceWidgetLeft=3;
 
-        this.node.on("touchend",this.backLineMask,this);
+        this.node.on("touchend",this.touchEndCB,this);
         this.node.on("touchcancel",this.backLineMask,this);
     },
     start () {
@@ -24,6 +27,11 @@ cc.Class({
             this.lineMaskWidget.left+=this.reduceWidgetLeft;
         }
 
+    },
+    touchEndCB(){
+        this.backLineMask();
+        let ballComp=this.ball.getComponent(BallComp);
+        ballComp.move();
     },
     backLineMask(){
         this.lineMaskWidget.left=-1500;
