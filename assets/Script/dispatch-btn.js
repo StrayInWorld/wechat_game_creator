@@ -34,12 +34,12 @@ cc.Class({
                 this.node.pauseSystemEvents(true);
         }
         else {
+            // cc.log("resume");
             this.node.resumeSystemEvents(true);
         }
     },
     onTouchEvent() {
         this.node.on("touchstart", function (event) {
-            cc.log("start touch");
             this.lineMaskWidget.left = 0;
             this.isChangeLeft = true;
             this.isDispatch = true;
@@ -59,10 +59,10 @@ cc.Class({
             let v2ByRotate = cc.v2(0, 1).rotate(-(this.ball.rotation * Math.PI / 180));
             this.velocity = v2ByRotate.normalize();
         }
-        cc.log("before", this.velocity);
+        // cc.log("before", this.velocity);
         this.ballComp.ballVelocity = this.velocity.mul(this.lineMaskWidget.left * 3);
         this.velocity = cc.v2(0, 0);
-        cc.log("after", this.ballComp.ballVelocity);
+        // cc.log("after", this.ballComp.ballVelocity);
         this.lineMaskWidget.left = -1500;
         this.isChangeLeft = false;
     }
