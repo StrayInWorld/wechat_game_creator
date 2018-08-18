@@ -2,21 +2,27 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-    
+        ballVelocity: cc.v2(0, 0),
+        ballAngularVelocity: cc.v2(0, 0)
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
-
-    start () {
-        this._position = cc.v2();
-        this._center = cc.v2();
+    onLoad() {
+        this.rigidBody = this.getComponent(cc.RigidBody);
+        this.arrow = this.node.getChildByName("arrow");
+        this.ballAngularVelocity = this.rigidBody.angularVelocity;
     },
-    move(){
-        let rigidBody=this.getComponent(cc.RigidBody);
-        // rigidBody.applyForceToCenter(cc.v2(-5000,3000),true);
-        // rigidBody.linearVelocity=cc.v2(-500,1000);
-    }
-    // update (dt) {},
+
+    start() { },
+    move() {
+        this.rigidBody.linearVelocity = this.ballVelocity;
+        this.rigidBody.angularDamping = 5;
+    },
+    update(dt) {
+        if (this.rigidBody.linearVelocity.mag() === 0) {
+            this.arrow.opacity = 255;
+        }
+        // cc.log(this.rigidBody.angularVelocity);
+    },
 });

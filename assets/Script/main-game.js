@@ -1,6 +1,5 @@
 let SquareTool = require("SquareTool");
 
-
 cc.Class({
     extends: cc.Component,
 
@@ -11,17 +10,23 @@ cc.Class({
         overLine: cc.Node,
         dispatchBtn: cc.Node,
         scheduleNum: cc.Label,
+        ball:cc.Node,
         arrow: cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
+        this.dispatchSquare=cc.find("Canvas/dispatchSquare");
+        this.overLine=cc.find("Canvas/overLien");
+        this.scheduleNum=cc.find("Canvas/scheduleNum");
+        this.scheduleNumLabel=this.scheduleNum.getComponent(cc.Label);
+        this.dispatchBtn=cc.find("Canvas/dispatchBtn");
+        this.ball=cc.find("Canvas/ball");
+        this.arrow=cc.find("Canvas/ball/arrow");
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
-        this.ball=this.arrow.parent;
-        cc.log(this.ball);
 
         //缓存池
         this.whiteSquarePool = new cc.NodePool();
@@ -30,58 +35,52 @@ cc.Class({
             let whiteSquare = cc.instantiate(this.whiteSquarePre);
             this.whiteSquarePool.put(whiteSquare);
         }
-
     },
 
     start() {
         //倒计时
         let action1 = cc.callFunc(function () {
-            this.scheduleNum.node.opacity = 0;
-            this.scheduleNum.node.scale = 0.1;
+            this.scheduleNum.opacity = 0;
+            this.scheduleNum.scale = 0.1;
         }, this);
         let action2 = cc.spawn(cc.scaleTo(0.5, 1.0), cc.fadeIn(0.5));
         let action3 = cc.fadeOut(0.5);
 
         let doActionNum = 0;
-        this.scheduleNum.string = "3";
-        this.scheduleNum.node.runAction(cc.sequence(
+        this.scheduleNumLabel.string = "3";
+        this.scheduleNum.runAction(cc.sequence(
             action1, action2, action3,
             cc.callFunc(function () {
                 doActionNum += 1;
                 if (doActionNum === 1) {
-                    this.scheduleNum.string = "2"
+                    this.scheduleNumLabel.string = "2"
                 }
                 else if (doActionNum === 2) {
-                    this.scheduleNum.string = "1"
+                    this.scheduleNumLabel.string = "1"
                     //显示黑色方块
                     this.dispatchSquare.opacity = 255;
                 }
                 else if (doActionNum === 3) {
                     //开启发射按钮事件回调
                     let dispatchBtnComp = this.dispatchBtn.getComponent("dispatch-btn");
-                    this.dispatchBtn.on("touchstart", function (event) {
-                        dispatchBtnComp.lineMaskWidget.left = 0;
-                        dispatchBtnComp.isChangeLeft = true;
-                        dispatchBtnComp.isDispatch = true;
-                    }, this);
+                    dispatchBtnComp.onTouchEvent();
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
                     this.node.on("touchmove", function (event) {
-                        //设置角度
+                        //设置箭头角度
                         let touch = event.touch;
-                        let startPos=cc.v2(touch.getPreviousLocation());
-                        let currentPos=cc.v2(touch.getLocation());
+                        let startPos = cc.v2(touch.getPreviousLocation());
+                        let currentPos = cc.v2(touch.getLocation());
                         let moveRad = currentPos.signAngle(startPos);
-                        let moveRotation = moveRad * 180 / Math.PI;
+                        let moveRotation = moveRad * 180 * 2 / Math.PI;
                         // cc.log("move event", -moveRotation);
                         this.arrow.rotation += -moveRotation;
-                        //设置刚体初始速度
-                        //速度不对
-                        cc.log(this.node.convertToWorldSpace(this.arrow.position));
-                        let vec=currentPos.sub(this.arrow.convertToWorldSpace(this.arrow.position));
-                        let velocity=vec.normalize().mulSelf(100);
-                        let rigidBody=this.ball.getComponent(cc.RigidBody);
-                        rigidBody.linearVelocity=velocity;
+
+                        //旋转过后向量
+                        let radians = (this.arrow.rotation + this.ball.rotation) * Math.PI / 180;
+                        let v2ByRotate = cc.v2(0, 1).rotate(-radians);
+                        dispatchBtnComp.velocity = v2ByRotate.normalize();
+
 
                     }, this);
                     //创建边缘方块
