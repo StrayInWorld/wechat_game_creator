@@ -24,20 +24,18 @@ cc.Class({
     onBeginContact(contact, selfCollider, otherCollider) {
         let otherNode = otherCollider.node;
         if (otherNode && otherNode.name === "singleSqaure") {
-            let numSpriteFrame = otherNode.getChildByName("sign");
-            let symbol=numSpriteFrame.getChildByName("symbol");
-            let num=numSpriteFrame.getChildByName("num");
-            cc.log(otherNode.getChildByName("New Node"));
-            cc.log(otherNode.getChildByName("sign"));
+            let sign=otherNode.getChildByName("sign");
+            let symbol=sign.getChildByName("symbol");
+            let num=sign.getChildByName("num");
 
-            if(numSpriteFrame){
+            if(sign){
                 let symbolSpriteFrame = symbol.getComponent(cc.Sprite).spriteFrame;
                 let numSpriteFrame = num.getComponent(cc.Sprite).spriteFrame;
                 this.calculatingScore(symbolSpriteFrame.name, numSpriteFrame.name);
-                let action=cc.spawn(cc.scaleBy(1.0,1,0.8),cc.moveBy(1.0,cc.v2(0,50)),cc.scaleTo(1.0,1,1));
+                let action=cc.spawn(cc.scaleBy(1.0,1,0.8),cc.moveBy(1.0,cc.v2(0,50)),cc.scaleTo(1.0,1,1),cc.fadeOut(1.0)).easing(cc.easeElasticInOut(1.0));
                 //判断是否有动作在执行
-                if(symbol.getNumberOfRunningActions()===0){
-                    numSpriteFrame.runAction(action);
+                if(sign.getNumberOfRunningActions()===0){
+                    sign.runAction(action);
                 }
      
                 // num.runAction(action);    
