@@ -30,7 +30,7 @@ cc.Class({
                     SquareTool.symbolSpriteFrame=assets;
                     self.node.runAction(cc.callFunc(function(){
                             let randomSquareComp = cc.instantiate(self.square).getComponent(SquareComp);
-                            SquareTool.createRandomSquare(self.square);
+                            SquareTool.createRandomSquare(self.square,false);
                     },self));
                 });
             }));

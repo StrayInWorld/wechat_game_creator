@@ -24,6 +24,8 @@ cc.Class({
         this.dispatchBtn=cc.find("Canvas/dispatchBtn");
         this.ball=cc.find("Canvas/ball");
         this.arrow=cc.find("Canvas/ball/arrow");
+        this.leftSquareMask=cc.find("Canvas/leftSquareMask");
+        this.rightSquareMask=cc.find("Canvas/rightSquareMask");
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
@@ -84,7 +86,11 @@ cc.Class({
 
                     }, this);
                     //创建边缘方块
-                    SquareTool.createRandomSquare(this.square, -260);
+                    SquareTool.createRandomSquare(this.square,true, -220);
+                    //对比高度
+                    let leftMaskCompHeight=this.node.convertToWorldSpaceAR(this.leftSquareMask.position).y-this.leftSquareMask.height/2;  //比较高度
+                    let rightMaskCompHeight=this.node.convertToWorldSpaceAR(this.rightSquareMask.position).y-this.rightSquareMask.height/2;            
+                    dispatchBtnComp.setMaskCompHeight(leftMaskCompHeight,rightMaskCompHeight);
                 }
             }, this)
         ).repeat(3));

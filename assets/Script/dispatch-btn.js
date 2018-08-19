@@ -9,9 +9,6 @@ cc.Class({
         ball: cc.Node,
         velocity: cc.v2(0, 0)
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
     onLoad() {
         this.lineMaskWidget = this.powerLineMask.getComponent(cc.Widget);
         this.isChangeLeft = false;
@@ -20,8 +17,19 @@ cc.Class({
 
         this.node.on("touchend", this.touchEndCB, this);
         this.node.on("touchcancel", this.backLineMask, this);
+
+        this.canvas=this.node.parent;
+        this.leftSquareMask=cc.find("Canvas/leftSquareMask");
+        this.leftMaskCompHeight=0;
+        this.rightSquareMask=cc.find("Canvas/rightSquareMask");
+        this.rightMaskCompHeight=0;
     },
     start() {
+
+    },
+    setMaskCompHeight(leftHeight,rightHeight){
+        this.leftMaskCompHeight=leftHeight;  //比较高度
+        this.rightMaskCompHeight=rightHeight;
 
     },
     update(dt) {
@@ -34,7 +42,6 @@ cc.Class({
                 this.node.pauseSystemEvents(true);
         }
         else {
-            // cc.log("resume");
             this.node.resumeSystemEvents(true);
         }
     },
@@ -52,6 +59,14 @@ cc.Class({
             this.ball.getChildByName("arrow").opacity = 0;
             this.ballComp.move();  //移动球    
         }
+        let childrenLength=this.leftSquareMask.children.length;
+        for(let i=0;i<childrenLength;i++){
+            this.leftSquareMask.children[i].runAction(cc.sequence(
+                cc.moveBy(1.0,0,-120),
+                cc.callFunc(function(){
+                    this.isDestory(this.leftSquareMask,this.leftSquareMask.children[i],this.leftMaskCompHeight);
+                },this)));
+        }
     },
     backLineMask() {
         //不转动箭头时线速度
@@ -65,5 +80,16 @@ cc.Class({
         // cc.log("after", this.ballComp.ballVelocity);
         this.lineMaskWidget.left = -1500;
         this.isChangeLeft = false;
+    },
+    isDestory(maskNode,squareNode,compareHeight){
+        if(squareNode){
+            let worldPos=maskNode.convertToWorldSpaceAR(squareNode.position);
+            // cc.log("AR",worldPos);
+            if(worldPos.y<compareHeight){
+                  squareNode.removeFromParent(true);
+            }
+    
+        }
+
     }
 });

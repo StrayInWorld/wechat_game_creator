@@ -3,7 +3,8 @@ cc.Class({
 
     properties: {
         isLeft:true,
-        floor:0
+        floor:0,
+        gameScene:true
     },
 
     onLoad () {
@@ -19,7 +20,10 @@ cc.Class({
             this.node.getChildByName("singleColor").color=new cc.color(148,245,201);
         }
         var nodeWidth=this.node.width*this.node.scaleX;
-        var canvasWidth=this.node.parent.width;
+        var canvasWidth=0;
+        if(!this.gameScene){
+            canvasWidth=this.node.parent.width;
+        }
         var extraWidth = 5;
         var targetX=cc.p(-canvasWidth/2+nodeWidth/2+extraWidth,this.node.y)
         if(!this.isLeft){
