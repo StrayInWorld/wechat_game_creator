@@ -23,6 +23,7 @@ cc.Class({
         this.scheduleNumLabel=this.scheduleNum.getComponent(cc.Label);
         this.dispatchBtn=cc.find("Canvas/dispatchBtn");
         this.ball=cc.find("Canvas/ball");
+        this.ballComp=this.ball.getComponent("BallComp");
         this.arrow=cc.find("Canvas/ball/arrow");
         this.leftSquareMask=cc.find("Canvas/leftSquareMask");
         this.rightSquareMask=cc.find("Canvas/rightSquareMask");
@@ -68,32 +69,37 @@ cc.Class({
                     dispatchBtnComp.onTouchEvent();
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
-                    this.node.on("touchmove", function (event) {
-                        //设置箭头角度
-                        let touch = event.touch;
-                        let startPos = cc.v2(touch.getPreviousLocation());
-                        let currentPos = cc.v2(touch.getLocation());
-                        let moveRad = currentPos.signAngle(startPos);
-                        let moveRotation = moveRad * 180 * 2 / Math.PI;
-                        // cc.log("move event", -moveRotation);
-                        this.arrow.rotation += -moveRotation;
-
-                        //旋转过后向量
-                        let radians = (this.arrow.rotation + this.ball.rotation) * Math.PI / 180;
-                        let v2ByRotate = cc.v2(0, 1).rotate(-radians);
-                        dispatchBtnComp.velocity = v2ByRotate.normalize();
-
-
-                    }, this);
-                    //创建边缘方块
-                    SquareTool.createRandomSquare(this.square,true, -220);
-                    //对比高度
-                    let leftMaskCompHeight=this.node.convertToWorldSpaceAR(this.leftSquareMask.position).y-this.leftSquareMask.height/2;  //比较高度
-                    let rightMaskCompHeight=this.node.convertToWorldSpaceAR(this.rightSquareMask.position).y-this.rightSquareMask.height/2;            
-                    dispatchBtnComp.setMaskCompHeight(leftMaskCompHeight,rightMaskCompHeight);
+                    //获取移动向量
+                    this.onTouchMove();
                 }
             }, this)
         ).repeat(3));
+    },
+    onTouchMove(){
+        let dispatchBtnComp = this.dispatchBtn.getComponent("dispatch-btn");
+        this.node.on("touchmove", function (event) {
+            //设置箭头角度
+            let touch = event.touch;
+            let startPos = cc.v2(touch.getPreviousLocation());
+            let currentPos = cc.v2(touch.getLocation());
+            let moveRad = currentPos.signAngle(startPos);
+            let moveRotation = moveRad * 180 * 2 / Math.PI;
+            // cc.log("move event", -moveRotation);
+            this.arrow.rotation += -moveRotation;
+
+            //旋转过后向量
+            let radians = (this.arrow.rotation + this.ball.rotation) * Math.PI / 180;
+            let v2ByRotate = cc.v2(0, 1).rotate(-radians);
+            dispatchBtnComp.velocity = v2ByRotate.normalize();
+
+
+        }, this);
+        //创建边缘方块
+        SquareTool.createRandomSquare(this.square,true, -220);
+        //对比高度
+        let leftMaskCompHeight=this.node.convertToWorldSpaceAR(this.leftSquareMask.position).y-this.leftSquareMask.height/2;  //比较高度
+        let rightMaskCompHeight=this.node.convertToWorldSpaceAR(this.rightSquareMask.position).y-this.rightSquareMask.height/2;            
+        this.ballComp.setMaskCompHeight(leftMaskCompHeight,rightMaskCompHeight);
     },
 
     update(dt) {
