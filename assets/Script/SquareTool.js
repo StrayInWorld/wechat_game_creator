@@ -29,11 +29,13 @@ let SquareTool = {
         let numNode = randomSquare.getChildByName("sign");
         randomSquare.setAnchorPoint(cc.v2(0, 0));
         //设置位置
-        let lastChild = parentNode.children[0]
-        randomSquare.y = lastChild.y - (this.distanceOfSquare * 2);
-        randomSquare.x = -canvasSidePos;
+        let childLength = parentNode.children.length;
+        let lastChild = parentNode.children[childLength-1]
+        randomSquare.y = lastChild.y + (this.distanceOfSquare * 2);
+        randomSquare.x = lastChild.x;
 
         let squareComp = randomSquare.getComponent(SquareComp);
+        squareComp.isRunAction=false;
         //设置符号纹理
         let randomSquareSymbol = numNode.getChildByName("symbol");
         let randomSymbol = this.symbolSpriteFrame[this.getInteger(4)];
@@ -56,7 +58,6 @@ let SquareTool = {
         randomSquareNum.getComponent(cc.Sprite).spriteFrame = randomNum;
         if (isRight) {
             squareComp.isLeft = false;
-            randomSquare.x = canvasSidePos;
         }
         return randomSquare;
 

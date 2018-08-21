@@ -49,8 +49,8 @@ cc.Class({
                     cc.fadeOut(1.0)
                 );
                 let seqAction = cc.sequence(action,
-                    cc.callFunc(function () { sign.removeFromParent() }, this),
                     cc.callFunc(function () {            //移动方块
+                        sign.removeFromParent();
                         if (squareComp && squareComp.floor >= 2) {
                             this.moveSideSquare();
                         }
@@ -73,45 +73,69 @@ cc.Class({
     },
     moveSideSquare() {
         //添加新的方块
-        let newLeftSquare=SquareTool.createSingleSquare(this.square,true,this.leftSquareMask);
-        if(newLeftSquare){
-            newLeftSquare.stopAllActions();
+        let newLeftSquare = SquareTool.createSingleSquare(this.square, true, this.leftSquareMask);
+        if (newLeftSquare) {
             this.leftSquareMask.addChild(newLeftSquare);
         }
-        let newRightSquare=SquareTool.createSingleSquare(this.square,true,this.rightSquareMask);
-        if(newRightSquare){
-            newRightSquare.stopAllActions();
+        let newRightSquare = SquareTool.createSingleSquare(this.square, false, this.rightSquareMask);
+        if (newRightSquare) {
             this.rightSquareMask.addChild(newRightSquare);
         }
 
         //移动方块
         let childrenLength = this.leftSquareMask.children.length;
         let moveLength = SquareTool.distanceOfSquare * 2;
+        // for (let i = 0; i < this.leftSquareMask.children.length; i++) {
+        //     cc.log(i, this.leftSquareMask.children[i].position);
+        //     this.leftSquareMask.children[i].runAction(cc.sequence(
+        //         cc.moveBy(1.0, 0, -moveLength),
+        //         cc.callFunc(function () {
+        //             // cc.log(i,this.leftSquareMask.children[i].position);
+        //             this.isDestory(this.leftSquareMask, this.leftSquareMask.children[i], this.leftMaskCompHeight);
+        //         }, this)
+        //     ));
+        //     this.rightSquareMask.children[i].runAction(cc.sequence(
+        //         cc.moveBy(1.0, 0, -moveLength),
+        //         cc.callFunc(function () {
+        //             this.isDestory(this.rightSquareMask, this.rightSquareMask.children[i], this.rightMaskCompHeight);
+        //         }, this)
+        //     ));
+        // }
+        this.mapOfSquareMask(this.leftSquareMask,this.leftMaskCompHeight);
+    },
+    mapOfSquareMask(squareMask, squareMaskHeight) {
+        let moveLength = SquareTool.distanceOfSquare * 2;
+        if (squareMask.children.constructor === Array) {
+            squareMask.children.map(function (item) {
+                item.runAction(cc.sequence(
+                    cc.callFunc(function(){
+                        cc.log(item.position);
+                    }),
+                    cc.moveBy(1.0, 0, -moveLength),
+                    cc.callFunc(function () {
+                        cc.log(item.position);
+                        // cc.log(item);
+                        // this.isDestory(squareMask, item, squareMaskHeight);
+                    }, this)
+
+                ));
+            },this);
+        }
+    },
+
+    updateSquareFloor(parentNode) {
+        let childrenLength = parentNode.children.length;
+        // cc.log("update",parentNode.children[0].children[3].children[0].getComponent(cc.Sprite).spriteFrame);
         for (let i = 0; i < childrenLength; i++) {
-            cc.log(this.leftSquareMask.children[i].position);
-            this.leftSquareMask.children[i].runAction(cc.sequence(
-                cc.moveBy(1.0, 0, -moveLength),
-                cc.callFunc(function () {
-                    this.isDestory(this.leftSquareMask, this.leftSquareMask.children[i], this.leftMaskCompHeight);
-                }, this)));
-            this.rightSquareMask.children[i].runAction(cc.sequence(
-                cc.moveBy(1.0, 0, -moveLength),
-                cc.callFunc(function () {
-                    this.isDestory(this.rightSquareMask, this.rightSquareMask.children[i], this.rightMaskCompHeight);
-                }, this)));
+            let squareComp = parentNode.children[i].getComponent("square-comp");
+            squareComp.floor = i;
         }
 
-        //重新设置floor
-        this.updateSquareFloor();
-    },
-    updateSquareFloor() {
-        let childrenLength = this.leftSquareMask.children.length;
-        for (let i = 0; i < childrenLength; i++) {
-            let leftSquareComp = this.leftSquareMask.children[i].getComponent("square-comp");
-            leftSquareComp.floor = i;
-            let rightSquareComp = this.rightSquareMask.children[i].getComponent("square-comp");
-            rightSquareComp.floor = i;
-        }
+        // for (let i = 0; i < childrenLength; i++) {
+        //     let leftSquareComp = this.leftSquareMask.children[i].getComponent("square-comp");
+        //     cc.log(leftSquareComp.floor);
+        // }
+
     },
     isDestory(maskNode, squareNode, compareHeight) {
         if (squareNode) {
@@ -119,6 +143,8 @@ cc.Class({
             // cc.log("AR",worldPos);
             if (worldPos.y < compareHeight) {
                 squareNode.removeFromParent(true);
+                // cc.log("isDestory",maskNode.children[0].children[3].children[0].getComponent(cc.Sprite).spriteFrame);
+                this.updateSquareFloor(maskNode);    //重新设置floor
             }
         }
     },
