@@ -60,7 +60,7 @@ cc.Class({
             let v2ByRotate = cc.v2(0, 1).rotate(-(this.ball.rotation * Math.PI / 180));
             this.velocity = v2ByRotate.normalize();
         }
-        this.ballComp.ballVelocity = this.velocity.mul(this.lineMaskWidget.left * 3);
+        this.ballComp.ballVelocity = this.velocity.mul(this.lineMaskWidget.left * 2);
         this.velocity = cc.v2(0, 0);
         this.lineMaskWidget.left = -1500;
         this.isChangeLeft = false;

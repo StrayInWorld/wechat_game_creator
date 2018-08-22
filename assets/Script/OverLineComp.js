@@ -10,23 +10,25 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.startAgainBtn.opacity=0;
-        this.rusemeGameBtn.opacity=0;
+        this.rusemeGameBtn.active=false;        
+        this.startAgainBtn.active=false;
     },
     onBeginContact(contact, selfCollider, otherCollider){
-        cc.director.pause();
         this.backBg.active=true;
-        this.startAgainBtn.opacity=255;
-        // this.rusemeGameBtn.opacity=255;
+        this.startAgainBtn.active=true;
+        this.backBg.on("touchstart",function(event){
+            event.stopPropagation();
+        });
     },
     start () {
 
     },
     onStartAgainCB(){
-        cc.director.resume();
         cc.director.loadScene("maingame");
         this.backBg.removeFromParent(true);
         this.backBg.active=false;
+        this.startAgainBtn.active=false;
+
     },
     onResumeAgainCB(){
         cc.log("resume");

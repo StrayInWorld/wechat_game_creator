@@ -26,7 +26,7 @@ cc.Class({
         let body = node.addComponent(cc.RigidBody);
         body.type = cc.RigidBodyType.Static;
 
-        // this._addBound(node, 0, height / 2, width, 20);
+        this._addBound(node, 0, height / 2, width, 20);
         // this._addBound(node, 0, -height / 2, width, 20);
         this._addBound(node, -width / 2, 0, 20, height);
         this._addBound(node, width / 2, 0, 20, height);

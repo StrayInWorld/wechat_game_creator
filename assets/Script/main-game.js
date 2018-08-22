@@ -49,7 +49,7 @@ cc.Class({
             this.scheduleNum.scale = 0.1;
         }, this);
         let action2 = cc.spawn(cc.scaleTo(0.5, 1.0), cc.fadeIn(0.5));
-        let action3 = cc.fadeOut(0.5);
+        let action3 = cc.fadeOut(0.3);
 
         let doActionNum = 0;
         this.scheduleNumLabel.string = "3";
@@ -109,12 +109,12 @@ cc.Class({
             //设置箭头角度
             let touch = event.touch;
             if (touch.getDelta().x > 0 || touch.getDelta().y < 0) {
-                this.wheel.rotation += 2;
-                this.arrow.rotation += 2;
+                this.wheel.rotation += 1;
+                this.arrow.rotation += 1;
             }
             else {
-                this.wheel.rotation -= 2;
-                this.arrow.rotation -= 2;
+                this.wheel.rotation -= 1;
+                this.arrow.rotation -= 1;
             }
 
             //旋转过后向量

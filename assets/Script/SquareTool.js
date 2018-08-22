@@ -1,8 +1,8 @@
 let SquareComp = require("square-comp");
-const X_SYM_INDEX=0;
-const ADD_SYM_INDEX=1;
-const DIV_SYM_INDEX=2;
-const SUB_SYM_INDEX=3;
+const X_SYM_INDEX = 0;
+const ADD_SYM_INDEX = 1;
+const DIV_SYM_INDEX = 2;
+const SUB_SYM_INDEX = 3;
 
 let SquareTool = {
     symbolSpriteFrame: null,
@@ -23,13 +23,27 @@ let SquareTool = {
     getInteger: function (toNum, fromNum = 0) {
         return Math.floor(Math.random() * toNum) + fromNum;
     },
-    reduceDivisionSym: function (num) {
-        if (num === DIV_SYM_INDEX) {   //索引为除号，根据概率重新赋值
-            if (Math.random() > 0.3) {
-                num = 1;
-            }
+    reduceProbability: function (toNum,fromNum=0) {
+        let newNum=this.getInteger(toNum,fromNum)
+        switch (newNum) {
+            case X_SYM_INDEX:
+                if (Math.random() > 0.4) {
+                    newNum = 1;
+                }
+                break;
+            case DIV_SYM_INDEX:
+                if (Math.random() > 0.3) {
+                    newNum = 1;
+                }
+                break;
+            case SUB_SYM_INDEX:
+                if (Math.random() > 0.5) {
+                    newNum = 1;
+                }
+                break;
         }
-        return num;
+
+        return newNum;
 
     },
     createSingleSquare(prefabNode, isRight, parentNode) {
@@ -51,7 +65,7 @@ let SquareTool = {
         squareComp.isRunAction = false;
         //设置符号纹理
         let randomSquareSymbol = numNode.getChildByName("symbol");
-        let randomSymbol = this.symbolSpriteFrame[this.reduceDivisionSym(this.getInteger(4))];  
+        let randomSymbol = this.symbolSpriteFrame[this.reduceProbability(4)];
         randomSquareSymbol.getComponent(cc.Sprite).spriteFrame = randomSymbol;
 
         //设置数字纹理
@@ -59,14 +73,14 @@ let SquareTool = {
         let randomNum = 0;
         //除法规避0
         if (this.isDivisionSymbol(randomSymbol.name)) {
-            randomNum = this.numberSpriteFrame[this.getInteger(9, 1)];
+            randomNum = this.numberSpriteFrame[this.reduceProbability(9, 1)];
         }
         //乘法取到2
         else if (this.isXSymbol(randomSymbol.name)) {
-            randomNum = this.numberSpriteFrame[this.getInteger(3, 0)];
+            randomNum = this.numberSpriteFrame[this.reduceProbability(3, 0)];
         }
         else {
-            randomNum = this.numberSpriteFrame[this.getInteger(10, 0)];
+            randomNum = this.numberSpriteFrame[this.reduceProbability(10, 0)];
         }
         randomSquareNum.getComponent(cc.Sprite).spriteFrame = randomNum;
         if (isRight) {
@@ -100,20 +114,20 @@ let SquareTool = {
 
             //设置随机符号
             let randomSquareSymbol = numNode.getChildByName("symbol");
-            let randomSymbol = this.symbolSpriteFrame[this.reduceDivisionSym(this.getInteger(4))];
+            let randomSymbol = this.symbolSpriteFrame[this.reduceProbability(4)];
             randomSquareSymbol.getComponent(cc.Sprite).spriteFrame = randomSymbol;
 
             //设置随机数字
             let randomSquareNum = numNode.getChildByName("num");
             let randomNum = 0;
             if (this.isDivisionSymbol(randomSymbol.name)) {
-                randomNum = this.numberSpriteFrame[this.getInteger(9, 1)];     //除法规避0
+                randomNum = this.numberSpriteFrame[this.reduceProbability(9, 1)];     //除法规避0
             }
             else if (this.isXSymbol(randomSymbol.name)) {
-                randomNum = this.numberSpriteFrame[this.getInteger(3, 0)];     //乘法取到2
+                randomNum = this.numberSpriteFrame[this.reduceProbability(3, 0)];     //乘法取到2
             }
             else {
-                randomNum = this.numberSpriteFrame[this.getInteger(10, 0)];
+                randomNum = this.numberSpriteFrame[this.reduceProbability(10, 0)];
             }
             randomSquareNum.getComponent(cc.Sprite).spriteFrame = randomNum;
 
