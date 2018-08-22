@@ -10,23 +10,23 @@ cc.Class({
         overLine: cc.Node,
         dispatchBtn: cc.Node,
         scheduleNum: cc.Label,
-        ball:cc.Node,
+        ball: cc.Node,
         arrow: cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this.dispatchSquare=cc.find("Canvas/dispatchSquare");
-        this.overLine=cc.find("Canvas/overLien");
-        this.scheduleNum=cc.find("Canvas/scheduleNum");
-        this.scheduleNumLabel=this.scheduleNum.getComponent(cc.Label);
-        this.dispatchBtn=cc.find("Canvas/dispatchBtn");
-        this.ball=cc.find("Canvas/ball");
-        this.ballComp=this.ball.getComponent("BallComp");
-        this.arrow=cc.find("Canvas/ball/arrow");
-        this.leftSquareMask=cc.find("Canvas/leftSquareMask");
-        this.rightSquareMask=cc.find("Canvas/rightSquareMask");
+        this.dispatchSquare = cc.find("Canvas/dispatchSquare");
+        this.overLine = cc.find("Canvas/overLien");
+        this.scheduleNum = cc.find("Canvas/scheduleNum");
+        this.scheduleNumLabel = this.scheduleNum.getComponent(cc.Label);
+        this.dispatchBtn = cc.find("Canvas/dispatchBtn");
+        this.ball = cc.find("Canvas/ball");
+        this.ballComp = this.ball.getComponent("BallComp");
+        this.arrow = cc.find("Canvas/ball/arrow");
+        this.leftSquareMask = cc.find("Canvas/leftSquareMask");
+        this.rightSquareMask = cc.find("Canvas/rightSquareMask");
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
@@ -69,13 +69,19 @@ cc.Class({
                     dispatchBtnComp.onTouchEvent();
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
-                    //获取移动向量
+                    //移动箭头，获取移动的向量
                     this.onTouchMove();
+                    //创建边缘方块
+                    SquareTool.createRandomSquare(this.square, true, -220);
+                    //对比高度
+                    let leftMaskCompHeight = this.node.convertToWorldSpaceAR(this.leftSquareMask.position).y - this.leftSquareMask.height / 2;  //比较高度
+                    let rightMaskCompHeight = this.node.convertToWorldSpaceAR(this.rightSquareMask.position).y - this.rightSquareMask.height / 2;
+                    this.ballComp.setMaskCompHeight(leftMaskCompHeight, rightMaskCompHeight);
                 }
             }, this)
         ).repeat(3));
     },
-    onTouchMove(){
+    onTouchMove() {
         let dispatchBtnComp = this.dispatchBtn.getComponent("dispatch-btn");
         this.node.on("touchmove", function (event) {
             //设置箭头角度
@@ -91,15 +97,8 @@ cc.Class({
             let radians = (this.arrow.rotation + this.ball.rotation) * Math.PI / 180;
             let v2ByRotate = cc.v2(0, 1).rotate(-radians);
             dispatchBtnComp.velocity = v2ByRotate.normalize();
-
-
         }, this);
-        //创建边缘方块
-        SquareTool.createRandomSquare(this.square,true, -220);
-        //对比高度
-        let leftMaskCompHeight=this.node.convertToWorldSpaceAR(this.leftSquareMask.position).y-this.leftSquareMask.height/2;  //比较高度
-        let rightMaskCompHeight=this.node.convertToWorldSpaceAR(this.rightSquareMask.position).y-this.rightSquareMask.height/2;            
-        this.ballComp.setMaskCompHeight(leftMaskCompHeight,rightMaskCompHeight);
+
     },
 
     update(dt) {

@@ -5,7 +5,8 @@ cc.Class({
 
     properties: {
         ballVelocity: cc.v2(0, 0),
-        square: cc.Prefab
+        square: cc.Prefab,
+        moveTime:1
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -51,10 +52,10 @@ cc.Class({
                 let seqAction = cc.sequence(action,
                     cc.callFunc(function () {            //移动方块
                         sign.removeFromParent();
-                        if (squareComp && squareComp.floor >= 2) {
+                        if (squareComp && squareComp.floor >= 3) {
                             let delayTime = 0;
                             if (otherNode.getNumberOfRunningActions() !== 0) {
-                                delayTime = 1;
+                                delayTime = this.moveTime;
                             }
                             otherNode.runAction(cc.sequence(
                                 cc.delayTime(delayTime),
@@ -78,6 +79,7 @@ cc.Class({
         }
     },
     setMaskCompHeight(leftHeight, rightHeight) {
+        cc.log(leftHeight, rightHeight);
         this.leftMaskCompHeight = leftHeight;  //比较高度
         this.rightMaskCompHeight = rightHeight;
     },
@@ -94,7 +96,7 @@ cc.Class({
         //移动方块
         let childrenLength = this.leftSquareMask.children.length;
         let moveLength = SquareTool.distanceOfSquare * 2;
-        this.mapOfSquareMask(this.leftSquareMask, this.leftMaskCompHeight);
+        // this.mapOfSquareMask(this.leftSquareMask, this.leftMaskCompHeight);
         this.mapOfSquareMask(this.rightSquareMask, this.rightMaskCompHeight);
     },
     mapOfSquareMask(squareMask, squareMaskHeight) {
@@ -102,7 +104,7 @@ cc.Class({
         if (squareMask.children.constructor === Array) {
             squareMask.children.map(function (item) {
                 item.runAction(cc.sequence(
-                    cc.moveBy(1.0, 0, -moveLength),
+                    cc.moveBy(this.moveTime, 0, -moveLength),
                     cc.callFunc(function () {
                         this.isDestory(squareMask, item, squareMaskHeight);
                     }, this)
