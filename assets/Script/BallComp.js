@@ -6,7 +6,7 @@ cc.Class({
     properties: {
         ballVelocity: cc.v2(0, 0),
         square: cc.Prefab,
-        moveTime:1
+        moveTime: 1
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -69,13 +69,23 @@ cc.Class({
                 sign.runAction(seqAction);
             }
         }
-        // let angular = Number.parseFloat(this.rigidBody.angularVelocity.toFixed(2));
-        let velo = this.rigidBody.angularVelocity;
-        if (this.arrow.opacity === 0) {
-            if ((velo >= 0 && velo <= 1) || (velo >= -1 && velo <= 0)) {
-                cc.log(velo);
-                this.arrow.opacity = 255;
-            }
+
+    },
+
+    // 每次将要处理碰撞体接触逻辑时被调用
+    onPreSolve: function (contact, selfCollider, otherCollider) {
+    },
+
+    // 每次处理完碰撞体接触逻辑时被调用
+    onPostSolve: function (contact, selfCollider, otherCollider) {
+        if (this.arrow.opacity === 0&&this.arrow.getNumberOfRunningActions()===0) {
+            this.arrow.runAction(cc.sequence(
+                cc.delayTime(0.5),
+                cc.callFunc(function () {
+                    this.arrow.opacity = 255;
+                    cc.log("is runAction");
+                }, this)
+            ));
         }
     },
     setMaskCompHeight(leftHeight, rightHeight) {
