@@ -11,7 +11,8 @@ cc.Class({
         dispatchBtn: cc.Node,
         scheduleNum: cc.Label,
         ball: cc.Node,
-        arrow: cc.Node
+        arrow: cc.Node,
+        wheel: cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -27,6 +28,7 @@ cc.Class({
         this.arrow = cc.find("Canvas/ball/arrow");
         this.leftSquareMask = cc.find("Canvas/leftSquareMask");
         this.rightSquareMask = cc.find("Canvas/rightSquareMask");
+        this.wheel = cc.find("Canvas/wheel");
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
@@ -57,11 +59,11 @@ cc.Class({
                 doActionNum += 1;
                 if (doActionNum === 1) {
                     this.scheduleNumLabel.string = "2"
+                    //显示黑色方块
+                    this.dispatchSquare.opacity = 255;
                 }
                 else if (doActionNum === 2) {
                     this.scheduleNumLabel.string = "1"
-                    //显示黑色方块
-                    this.dispatchSquare.opacity = 255;
                 }
                 else if (doActionNum === 3) {
                     //开启发射按钮事件回调
@@ -70,7 +72,8 @@ cc.Class({
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
                     //移动箭头，获取移动的向量
-                    this.onTouchMove();
+                    // this.onTouchMove();
+                    this.onWheelMove();
                     //创建边缘方块
                     SquareTool.createRandomSquare(this.square, true, -220);
                     //对比高度
@@ -100,11 +103,31 @@ cc.Class({
         }, this);
 
     },
+    onWheelMove() {
+        let dispatchBtnComp = this.dispatchBtn.getComponent("dispatch-btn");
+        this.wheel.on("touchmove", function (event) {
+            //设置箭头角度
+            let touch = event.touch;
+            if (touch.getDelta().x > 0 || touch.getDelta().y < 0) {
+                this.wheel.rotation += 2;
+                this.arrow.rotation += 2;
+            }
+            else {
+                this.wheel.rotation -= 2;
+                this.arrow.rotation -= 2;
+            }
 
+            //旋转过后向量
+            let radians = (this.arrow.rotation + this.ball.rotation) * Math.PI / 180;
+            let v2ByRotate = cc.v2(0, 1).rotate(-radians);
+            dispatchBtnComp.velocity = v2ByRotate.normalize();
+        }, this);
+
+    },
     update(dt) {
-        let hasSchedule = cc.director.getScheduler().isScheduled(this.createWhiteSquare, this);
-        let isDispatch = this.dispatchBtn.getComponent("dispatch-btn").isDispatch;
-        //开启中间方块降落计时器
+        //开启中间方块降落计时器        
+        // let hasSchedule = cc.director.getScheduler().isScheduled(this.createWhiteSquare, this);
+        // let isDispatch = this.dispatchBtn.getComponent("dispatch-btn").isDispatch;
         // if (isDispatch && !hasSchedule) {
         //     this.schedule(this.createWhiteSquare, 3.5, cc.macro.REPEAT_FOREVER);
         // }

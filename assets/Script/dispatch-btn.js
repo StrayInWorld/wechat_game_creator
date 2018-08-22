@@ -14,6 +14,7 @@ cc.Class({
         this.isChangeLeft = false;
         this.reduceLength = 3;
         this.ballComp = this.ball.getComponent(BallComp);
+        this.dispatchSquare = cc.find("Canvas/dispatchSquare");
 
         this.node.on("touchend", this.touchEndCB, this);
         this.node.on("touchcancel", this.backLineMask, this)
@@ -48,6 +49,9 @@ cc.Class({
         if (this.ballComp.ballVelocity.mag() !== 0) {
             this.ball.getChildByName("arrow").opacity = 0;
             this.ballComp.move();  //移动球    
+        }
+        if(this.dispatchSquare){
+            this.dispatchSquare.removeFromParent(true);
         }
     },
     backLineMask() {

@@ -1,4 +1,8 @@
 let SquareComp = require("square-comp");
+const X_SYM_INDEX=0;
+const ADD_SYM_INDEX=1;
+const DIV_SYM_INDEX=2;
+const SUB_SYM_INDEX=3;
 
 let SquareTool = {
     symbolSpriteFrame: null,
@@ -19,6 +23,15 @@ let SquareTool = {
     getInteger: function (toNum, fromNum = 0) {
         return Math.floor(Math.random() * toNum) + fromNum;
     },
+    reduceDivisionSym: function (num) {
+        if (num === DIV_SYM_INDEX) {   //索引为除号，根据概率重新赋值
+            if (Math.random() > 0.3) {
+                num = 1;
+            }
+        }
+        return num;
+
+    },
     createSingleSquare(prefabNode, isRight, parentNode) {
         let canvas = cc.director.getScene().getChildByName("Canvas");
         let canvasWidth = canvas.width;
@@ -38,7 +51,7 @@ let SquareTool = {
         squareComp.isRunAction = false;
         //设置符号纹理
         let randomSquareSymbol = numNode.getChildByName("symbol");
-        let randomSymbol = this.symbolSpriteFrame[this.getInteger(4)];
+        let randomSymbol = this.symbolSpriteFrame[this.reduceDivisionSym(this.getInteger(4))];  
         randomSquareSymbol.getComponent(cc.Sprite).spriteFrame = randomSymbol;
 
         //设置数字纹理
@@ -87,7 +100,7 @@ let SquareTool = {
 
             //设置随机符号
             let randomSquareSymbol = numNode.getChildByName("symbol");
-            let randomSymbol = this.symbolSpriteFrame[this.getInteger(4)];
+            let randomSymbol = this.symbolSpriteFrame[this.reduceDivisionSym(this.getInteger(4))];
             randomSquareSymbol.getComponent(cc.Sprite).spriteFrame = randomSymbol;
 
             //设置随机数字
@@ -121,7 +134,7 @@ let SquareTool = {
                     leftSquareMask.addChild(randomSquare);
                 }
                 else {
-                    randomSquare.y = startHeight + i * this.distanceOfSquare-randomSquare.height/2;
+                    randomSquare.y = startHeight + i * this.distanceOfSquare - randomSquare.height / 2;
                     rightSquareMask.addChild(randomSquare);
                 }
             }

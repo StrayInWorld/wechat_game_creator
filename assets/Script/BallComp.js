@@ -96,7 +96,7 @@ cc.Class({
         //移动方块
         let childrenLength = this.leftSquareMask.children.length;
         let moveLength = SquareTool.distanceOfSquare * 2;
-        // this.mapOfSquareMask(this.leftSquareMask, this.leftMaskCompHeight);
+        this.mapOfSquareMask(this.leftSquareMask, this.leftMaskCompHeight);
         this.mapOfSquareMask(this.rightSquareMask, this.rightMaskCompHeight);
     },
     mapOfSquareMask(squareMask, squareMaskHeight) {
