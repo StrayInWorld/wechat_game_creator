@@ -20,7 +20,6 @@ cc.Class({
 
         let width = this.size.width || this.node.width;
         let height = this.size.height || this.node.height;
-        cc.log("width=%d,height=%d", width, height);
         let node = new cc.Node();
 
         let body = node.addComponent(cc.RigidBody);

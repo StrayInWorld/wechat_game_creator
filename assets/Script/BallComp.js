@@ -72,10 +72,6 @@ cc.Class({
 
     },
 
-    // 每次将要处理碰撞体接触逻辑时被调用
-    onPreSolve: function (contact, selfCollider, otherCollider) {
-    },
-
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve: function (contact, selfCollider, otherCollider) {
         if (this.arrow.opacity === 0&&this.arrow.getNumberOfRunningActions()===0) {
@@ -83,13 +79,11 @@ cc.Class({
                 cc.delayTime(0.5),
                 cc.callFunc(function () {
                     this.arrow.opacity = 255;
-                    cc.log("is runAction");
                 }, this)
             ));
         }
     },
     setMaskCompHeight(leftHeight, rightHeight) {
-        cc.log(leftHeight, rightHeight);
         this.leftMaskCompHeight = leftHeight;  //比较高度
         this.rightMaskCompHeight = rightHeight;
     },
