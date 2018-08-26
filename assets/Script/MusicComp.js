@@ -51,8 +51,12 @@ cc.Class({
         else {
             this.play();
             this.setMusicStorage(true);
-            this.node.resumeAllActions();
-            this.node.rotation = 0;
+            if(this.node.getNumberOfRunningActions()===0){
+                this.node.runAction(cc.repeatForever(cc.rotateBy(1, 30)));
+            }
+            else{
+                this.node.resumeAllActions();
+            }
         }
     },
     play: function () {
