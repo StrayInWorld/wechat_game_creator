@@ -1,5 +1,5 @@
 let SquareComp = require("square-comp");
-let SquareTool=require("SquareTool");
+let SquareTool = require("SquareTool");
 
 cc.Class({
     extends: cc.Component,
@@ -20,23 +20,21 @@ cc.Class({
                 cc.error(err.message || err);
                 return;
             }
-            SquareTool.numberSpriteFrame=assets;
-            self.node.runAction(cc.callFunc(function(){
+            SquareTool.numberSpriteFrame = assets;
+            self.node.runAction(cc.callFunc(function () {
                 cc.loader.loadResDir("symbol", cc.SpriteFrame, function (err, assets, url) {
                     if (err) {
                         cc.error(err.message || err);
                         return;
                     }
-                    SquareTool.symbolSpriteFrame=assets;
-                    self.node.runAction(cc.callFunc(function(){
-                            let randomSquareComp = cc.instantiate(self.square).getComponent(SquareComp);
-                            SquareTool.createRandomSquare(self.square,false);
-                    },self));
+                    SquareTool.symbolSpriteFrame = assets;
+                    self.node.runAction(cc.callFunc(function () {
+                        let randomSquareComp = cc.instantiate(self.square).getComponent(SquareComp);
+                        SquareTool.createRandomSquare(self.square, false);
+                    }, self));
                 });
             }));
         });
-
-
 
         //开始按钮
         this.startBtn.setOpacity(0);
@@ -45,13 +43,11 @@ cc.Class({
         //标题
         let rotateAct = cc.sequence(cc.rotateBy(0.5, 15), cc.rotateBy(0.5, -15));
         this.gameTitleNode.runAction(cc.moveTo(1.0, cc.p(0, 0)).easing(cc.easeExponentialInOut(3)));
-
-
     },
     startBtnCB() {
         cc.director.loadScene("maingame");
     },
-    start(){}
+    start() { }
 
     // update (dt) {},
 });

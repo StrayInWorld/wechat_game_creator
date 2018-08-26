@@ -8,6 +8,8 @@ let SquareTool = {
     symbolSpriteFrame: null,
     numberSpriteFrame: null,
     distanceOfSquare: 60,
+    musicStorage:"music",
+    highScoreStorage:"highScore",
     isDivisionSymbol: function (symbolName) {
         if (symbolName === "division") {
             return true;

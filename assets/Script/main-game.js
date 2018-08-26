@@ -29,6 +29,7 @@ cc.Class({
         this.leftSquareMask = cc.find("Canvas/leftSquareMask");
         this.rightSquareMask = cc.find("Canvas/rightSquareMask");
         this.wheel = cc.find("Canvas/wheel");
+        this.wheel.active=false;
         this.squareWidget = this.dispatchSquare.getComponent(cc.Widget);
         this.dispatchSquare.opacity = 0;
         this.arrow.opacity = 0;
@@ -72,8 +73,9 @@ cc.Class({
                     //显示箭头，并监听箭头触摸事件
                     this.arrow.runAction(cc.fadeIn(3));
                     //移动箭头，获取移动的向量
-                    // this.onTouchMove();
-                    this.onWheelMove();
+                    // this.onTouchStart();     //点击屏幕直接移动
+                    this.onTouchMove();    //屏幕移动
+                    // this.onWheelMove();   //转盘移动
                     //创建边缘方块
                     SquareTool.createRandomSquare(this.square, true, -220);
                     //对比高度
