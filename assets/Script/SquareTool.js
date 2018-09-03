@@ -92,7 +92,7 @@ let SquareTool = {
 
 
     },
-    createRandomSquare: function (prefabNode, gameScene, startHeight = -380) {
+    createRandomSquare: function (prefabNode, gameScene, startHeight = -280) {
         let canvas = cc.director.getScene().getChildByName("Canvas");
         let canvasWidth = canvas.width;
         let prefabInstance = cc.instantiate(prefabNode);
