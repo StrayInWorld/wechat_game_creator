@@ -36,13 +36,13 @@ cc.Class({
             }));
         });
 
-        //开始按钮
-        this.startBtn.setOpacity(0);
+        //开始按钮  
+        this.startBtn.opacity =  0;
         this.startBtn.runAction(cc.fadeIn(1.5));
 
         //标题
         let rotateAct = cc.sequence(cc.rotateBy(0.5, 15), cc.rotateBy(0.5, -15));
-        this.gameTitleNode.runAction(cc.moveTo(1.0, cc.p(0, 0)).easing(cc.easeExponentialInOut(3)));
+        this.gameTitleNode.runAction(cc.moveTo(1.0, cc.v2(0, 0)).easing(cc.easeExponentialInOut(3)));
     },
     startBtnCB() {
         cc.director.loadScene("maingame");

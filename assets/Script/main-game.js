@@ -154,10 +154,10 @@ cc.Class({
         whiteSquareInPool.runAction(cc.sequence(
             cc.spawn(
                 cc.fadeIn(0.5),
-                cc.moveBy(5, cc.p(0, moveDuration)),
+                cc.moveBy(5, cc.v2(0, moveDuration)),
             ),
             cc.spawn(
-                cc.moveBy(0.5, cc.p(0, -whiteSquareInPool.height / 2)),
+                cc.moveBy(0.5, cc.v2(0, -whiteSquareInPool.height / 2)),
                 cc.fadeOut(0.5)
             ),
             cc.callFunc(function () {
